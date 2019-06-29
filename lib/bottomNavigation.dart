@@ -1,158 +1,285 @@
-library bottom_navy_bar;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+//import 'package:tabbar_animation/TabBarAnimation.dart';
+import 'dart:math';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+void main() => runApp(MyApp1());
 
-class BottomNavyBar extends StatefulWidget {
-
-  int selectedIndex;
-  final double iconSize;
-  final Color backgroundColor;
-  final bool showElevation;
-  final List<BottomNavyBarItem> items;
-  final ValueChanged<int> onItemSelected;
-
-  BottomNavyBar(
-      {Key key,
-        this.selectedIndex = 0,
-        this.showElevation = true,
-        this.iconSize = 24,
-        this.backgroundColor,
-        @required this.items,
-        @required this.onItemSelected}) {
-    assert(items != null);
-    assert(items.length >= 2 && items.length <= 5);
-    assert(onItemSelected != null);
-  }
-
+class MyApp1 extends StatelessWidget {
+  // This widget is the root of your application.
   @override
-  _BottomNavyBarState createState() {
-    return _BottomNavyBarState(
-        items: items,
-        backgroundColor: backgroundColor,
-        iconSize: iconSize,
-        onItemSelected: onItemSelected);
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    );
   }
 }
 
-class _BottomNavyBarState extends State<BottomNavyBar> {
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
 
-  final double iconSize;
-  Color backgroundColor;
-  List<BottomNavyBarItem> items;
+  final String title;
 
-  ValueChanged<int> onItemSelected;
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Bubbles',
+      home: TabBarAnimation(),
+    );
+
+  }
+}
+
+class TabBarAnimation extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _BubblesState();
+  }
+}
+
+class _BubblesState extends State<TabBarAnimation> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  List<Bubble> bubbles;
+  final int numberOfBubbles = 400;
+  final Color color = Colors.pink;
+  final double maxBubbleSize = 12.0;
+  int _page = 0;
+  String tabNo = 'Add Tab';
 
   @override
   void initState() {
     super.initState();
 
-  }
-  _BottomNavyBarState(
-      {@required this.items,
-        this.backgroundColor,
-        this.iconSize,
-        @required this.onItemSelected});
+    // Initialize bubbles
+    bubbles = List();
+    int i = numberOfBubbles;
+    while (i > 0) {
+      bubbles.add(Bubble(color, maxBubbleSize));
+      i--;
+    }
 
-  Widget _buildItem(BottomNavyBarItem item, bool isSelected) {
-    return AnimatedContainer(
-      width: isSelected ? 130 : 50,
-      height: double.maxFinite,
-      duration: Duration(milliseconds: 270),
-      padding: EdgeInsets.only(left: 12),
-      decoration: BoxDecoration(
-        color: isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-      ),
-      child: ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: IconTheme(
-                  data: IconThemeData(
-                      size: iconSize,
-                      color: isSelected
-                          ? item.activeColor.withOpacity(1)
-                          : item.inactiveColor == null
-                          ? item.activeColor
-                          : item.inactiveColor),
-                  child: item.icon,
-                ),
-              ),
-              isSelected
-                  ? DefaultTextStyle.merge(
-                style: TextStyle(
-                    color: item.activeColor, fontWeight: FontWeight.bold),
-                child: item.title,
-              )
-                  : SizedBox.shrink()
-            ],
-          )
-        ],
-      ),
-    );
+    // animation controller
+    _controller = new AnimationController(
+        duration: const Duration(seconds: 1500), vsync: this);
+    _controller.addListener(() {
+      updateBubblePosition();
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    backgroundColor = (backgroundColor == null)
-        ? Theme.of(context).bottomAppBarColor
-        : backgroundColor;
+    return Scaffold(
+      bottomNavigationBar: CurvedNavigationBar(
+        initialIndex: 0,
+        items: <Widget>[
+          Icon(Icons.add, size: 30),
+          Icon(Icons.list, size: 30),
+          Icon(Icons.compare_arrows, size: 30),
+          Icon(Icons.call_split, size: 30),
+          Icon(Icons.perm_identity, size: 30),
+        ],
+        color: Colors.white,
+        buttonBackgroundColor: Colors.white,
+        backgroundColor: Colors.purple,
+        animationCurve: Curves.easeInOut,
+        animationDuration: Duration(milliseconds: 600),
+        onTap: (index) {
+          setState(() {
+            _page = index;
+            if(_page == 0){
+              tabNo = 'Add Tab';
 
-    return Container(
-        decoration: BoxDecoration(
-            color: backgroundColor,
-            boxShadow: [
-            if(widget.showElevation)
-        BoxShadow(color: Colors.black12, blurRadius: 2)
+            }else if(_page == 1){
+              tabNo = 'List Tab';
+            }else if(_page == 2){
+              tabNo = 'Exchange Tab';
+            }else if(_page == 3){
+              tabNo = 'Direction Tab';
+            }else {
+              tabNo = 'Profile Tab';
+            }
+          });
+        },
+      ),
 
-    ]
-    ),
-    child: SafeArea(
-    child: Container(
-    width: double.infinity,
-    height: 56,
-    padding: EdgeInsets.only(left: 8, right: 8, top: 6, bottom: 6),
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: items.map((item) {
-    var index = items.indexOf(item);
-    return GestureDetector(
-    onTap: () {
-    onItemSelected(index);
-    setState(() {
-    widget.selectedIndex = index;
-    });
-    },
-    child: _buildItem(item, widget.selectedIndex == index),
+      body: Container(
+        color: Colors.purple,
+        child: Stack(
+          children: <Widget>[
+            Center(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 100.0,),// Margin
+
+                    new Container(
+                        width: 150.0,
+                        height: 150.0,
+                        decoration: new BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: new DecorationImage(
+                                fit: BoxFit.fill,
+                                image: new NetworkImage(
+                                  'https://www.amazevalley.com/images/amaze_logo.jpeg',)
+                            )
+                        )
+                    ),
+//
+                    Text('Amazevalley',textScaleFactor: 4.0,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.bold,
+                        shadows: <Shadow>[
+                          Shadow(
+                            offset: Offset(2.0, 2.0),
+                            blurRadius: 3.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                          Shadow(
+                            offset: Offset(2.0, 2.0),
+                            blurRadius: 8.0,
+                            color: Color.fromARGB(125, 0, 0, 255),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Container(color: Colors.white, height: 2.0, width: MediaQuery.of(context).size.width -30,),
+
+                    Container(
+                      color: Colors.purple,
+                      child: Center(
+                        child: Text(tabNo, textScaleFactor: 3.0, style: TextStyle(
+                          color: Colors.white,
+                          shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                            Shadow(
+                              offset: Offset(2.0, 2.0),
+                              blurRadius: 8.0,
+                              color: Color.fromARGB(125, 0, 0, 255),
+                            ),
+                          ],
+                        ),
+                        ),
+                      ),
+                    ),
+
+                  ],
+                )
+
+            ),
+
+            CustomPaint( //This is Animation as shown in previous video
+              foregroundPainter:
+              BubblePainter(bubbles: bubbles, controller: _controller),
+              size: Size(MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height),
+            ),
+          ],
+        ),
+
+      ),
+
     );
-    }).toList(),
-    ),
-    ),
-    ),
-    );
+  }
+
+  void updateBubblePosition() {
+    bubbles.forEach((it) => it.updatePosition());
+    setState(() {});
   }
 }
 
-class BottomNavyBarItem {
-  final Icon icon;
-  final Text title;
-  final Color activeColor;
-  final Color inactiveColor;
+class BubblePainter extends CustomPainter {
+  List<Bubble> bubbles;
+  AnimationController controller;
 
-  BottomNavyBarItem(
-      {@required this.icon,
-        @required this.title,
-        this.activeColor = Colors.blue,
-        this.inactiveColor}) {
-    assert(icon != null);
-    assert(title != null);
+  BubblePainter({this.bubbles, this.controller});
+
+  @override
+  void paint(Canvas canvas, Size canvasSize) {
+    bubbles.forEach((it) => it.draw(canvas, canvasSize));
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class Bubble {
+  Color colour;
+  double direction;
+  double speed;
+  double radius;
+  double x;
+  double y;
+
+  Bubble(Color colour, double maxBubbleSize) {
+    this.colour = colour.withOpacity(Random().nextDouble());
+    this.direction = Random().nextDouble() * 360;
+    this.speed = 1;
+    this.radius = Random().nextDouble() * maxBubbleSize;
+  }
+
+  draw(Canvas canvas, Size canvasSize) {
+    Paint paint = new Paint()
+      ..color = colour
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.fill;
+
+    assignRandomPositionIfUninitialized(canvasSize);
+
+    randomlyChangeDirectionIfEdgeReached(canvasSize);
+
+    canvas.drawCircle(Offset(x, y), radius, paint);
+  }
+
+  void assignRandomPositionIfUninitialized(Size canvasSize) {
+    if (x == null) {
+      this.x = Random().nextDouble() * canvasSize.width;
+    }
+
+    if (y == null) {
+      this.y = Random().nextDouble() * canvasSize.height;
+    }
+  }
+
+  updatePosition() {
+    var a = 180 - (direction + 90);
+    direction > 0 && direction < 180
+        ? x += speed * sin(direction) / sin(speed)
+        : x -= speed * sin(direction) / sin(speed);
+    direction > 90 && direction < 270
+        ? y += speed * sin(a) / sin(speed)
+        : y -= speed * sin(a) / sin(speed);
+  }
+
+  randomlyChangeDirectionIfEdgeReached(Size canvasSize) {
+    if (x > canvasSize.width || x < 0 || y > canvasSize.height || y < 0) {
+      direction = Random().nextDouble() * 360;
+    }
   }
 }

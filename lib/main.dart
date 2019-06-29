@@ -5,7 +5,11 @@ import 'demo3/demo3.dart';
 import 'demo4/demo4.dart';
 import 'demo5/demo5.dart';
 import 'scrollerdemo.dart';
+import 'bottomNavigation.dart';
 //import 'manuscreen.dart';
+import 'demo6/demo6.dart';
+import 'demo7/demo7.dart';
+import 'demo8/demo8.dart';
 
 void main() => runApp(new ZoomSide());
 
@@ -166,6 +170,40 @@ class MenuScreen extends StatelessWidget{
           ),
 
           new ListTile(
+            title: new Text(" (6) Demo 6"),
+            trailing: new Icon(Icons.arrow_right),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=> new StoryApp()));
+//                new TextChanges();
+//                Navigator.of(context).pushNamed("/b");
+            },
+          ),
+
+          new ListTile(
+            title: new Text(" (7) Demo 7"),
+            trailing: new Icon(Icons.arrow_right),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=> new Demo7()));
+//                new TextChanges();
+//                Navigator.of(context).pushNamed("/b");
+            },
+          ),
+
+          new ListTile(
+            title: new Text(" (8) Demo 8"),
+            trailing: new Icon(Icons.arrow_right),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=> new Demo8()));
+//                new TextChanges();
+//                Navigator.of(context).pushNamed("/b");
+            },
+          ),
+
+          //-----------------------
+          new ListTile(
             title: new Text(" --> Scroller Demo"),
             trailing: new Icon(Icons.arrow_right),
             onTap: () {
@@ -176,16 +214,7 @@ class MenuScreen extends StatelessWidget{
             },
           ),
 
-          new ListTile(
-            title: new Text(" --> Zoom Screen"),
-            trailing: new Icon(Icons.arrow_right),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=> new ZoomSide()));
-//                new TextChanges();
-//                Navigator.of(context).pushNamed("/b");
-            },
-          ),
+
 
 //          Column(
 //            children: options.map((item) {
@@ -208,7 +237,7 @@ class MenuScreen extends StatelessWidget{
 
           Spacer(),
 
-          ListTile(
+          /*ListTile(
             onTap: (){},
             leading: Icon(Icons.settings, color: Colors.white, size: 20,),
             title: Text('Settings',
@@ -222,7 +251,7 @@ class MenuScreen extends StatelessWidget{
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.white
-                )),),
+                )),),*/
         ],
       ),
     );
@@ -298,28 +327,29 @@ class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMix
                 )
               ],
             ),
-            body: widget.contentScreen.contentBuilder(context),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: 0,
-              items: [
-                BottomNavigationBarItem(
-                    title: Text(''),
-                    icon: Icon(Icons.home, color: Colors.grey,)
-                ),
-                BottomNavigationBarItem(
-                    title: Text(''),
-                    icon: Icon(Icons.shopping_basket, color: Colors.grey)
-                ),
-                BottomNavigationBarItem(
-                    title: Text(''),
-                    icon: Icon(Icons.shopping_cart, color: Colors.grey)
-                ),BottomNavigationBarItem(
-                    title: Text(''),
-                    icon: Icon(Icons.person, color: Colors.grey)
-                ),
-              ],
-            ),
+              body: MyApp1(),
+//            body: widget.contentScreen.contentBuilder(context),
+//            bottomNavigationBar: BottomNavigationBar(
+//              type: BottomNavigationBarType.fixed,
+//              currentIndex: 0,
+//              items: [
+//                BottomNavigationBarItem(
+//                    title: Text(''),
+//                    icon: Icon(Icons.home, color: Colors.grey,)
+//                ),
+//                BottomNavigationBarItem(
+//                    title: Text(''),
+//                    icon: Icon(Icons.shopping_basket, color: Colors.grey)
+//                ),
+//                BottomNavigationBarItem(
+//                    title: Text(''),
+//                    icon: Icon(Icons.shopping_cart, color: Colors.grey)
+//                ),BottomNavigationBarItem(
+//                    title: Text(''),
+//                    icon: Icon(Icons.person, color: Colors.grey)
+//                ),
+//              ],
+//            ),
           ),
         )
     );
